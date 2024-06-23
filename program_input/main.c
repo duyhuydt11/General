@@ -2,15 +2,22 @@
 
 int main()
 {
+	My_GPIOC->My_BSRR = 0;
 	GPIO_Config();
+	int count = 0;
 	while(1)
 	{
-		if((My_GPIOB->My_IDR & GPIO_Pin_3) == GPIO_Pin_3)
-		{
+		
+		if(GPIO_Read_Pin(My_GPIOB, GPIO_Pin_4) == 0) count++;
+		if(count == 4)
 			GPIO_Set_Pin(My_GPIOC, GPIO_Pin_13);
+		
+		else
+		{
+			GPIO_Reset_Pin(My_GPIOC, GPIO_Pin_13);
 		}
-		else GPIO_Reset_Pin(My_GPIOC, GPIO_Pin_13);
-		Delay(20);
+
+		Delay(100);
 	}
 
 }

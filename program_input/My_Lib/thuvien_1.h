@@ -1,4 +1,7 @@
 //**************************************************INCLUDE***********************************************************
+#ifndef __THUVIEN_1_H
+#define __THUVIEN_1_H
+
 #include <stdio.h>
 #include <stdint.h>
 #include "stm32f10x.h"
@@ -18,7 +21,7 @@
 #define My_GPIOC               ((My_GPIO_REG_TYPE *) GPIOC_BASE)
 #define My_RCC                 ((My_RRC_REG_TYPE *) RCC_BASE)
 #define My_GPIOB               ((My_GPIO_REG_TYPE *) GPIOB_BASE)
-
+#define My_GPIOA               ((My_GPIO_REG_TYPE *) GPIOA_BASE)
 
 //**************************************************GLOBAL VARIABLE***************************************************************
 
@@ -64,20 +67,35 @@ typedef enum
 typedef enum
 { My_GPIO_Mode_AIN = 0x0,
   My_GPIO_Mode_IN_FLOATING = 0x04,
-  My_GPIO_Mode_IPD = 0x28,
-  My_GPIO_Mode_IPU = 0x48,
+  My_GPIO_Mode_Input = 0x08,
   My_GPIO_Mode_Out_OD = 0x14,
   My_GPIO_Mode_Out_PP = 0x10,
   My_GPIO_Mode_AF_OD = 0x1C,
   My_GPIO_Mode_AF_PP = 0x18
 }My_GPIOMode_TypeDef;
 
+typedef enum
+{
+	My_NoPull = 0u,
+  My_PD = 1u,
+  My_PU = 2u
+} My_Pull_Mode;
 
 typedef struct
-{	uint16_t My_GPIO_Pin;                                       
+{	
+	uint16_t My_GPIO_Pin;     
   My_GPIOSpeed_TypeDef My_GPIO_Speed;                                
-  My_GPIOMode_TypeDef My_GPIO_Mode;                                
+  My_GPIOMode_TypeDef My_GPIO_Mode;   
+	My_Pull_Mode My_GPIO_Pull;	
 }My_GPIO_InitTypeDef;
+
+typedef enum
+{
+  GPIO_Pin_Reset = 0u,
+  GPIO_Pin_Set
+} My_GPIO_PinState;
+
+
 
 
 //**************************************************FUNCTION PROTOTYPE************************************************************
@@ -88,3 +106,7 @@ void Toggle_Pin(My_GPIO_REG_TYPE* GPIOx, uint32_t GPIO_Pin);
 void ClockSource(uint32_t Port, My_GPIO_REG_TYPE* GPIOx ,My_GPIO_InitTypeDef* GPIO_InitStruct, My_RRC_REG_TYPE* RCCx);
 void GPIO_Reset_Pin(My_GPIO_REG_TYPE* GPIOx, uint32_t GPIO_Pin);
 void GPIO_Set_Pin(My_GPIO_REG_TYPE* GPIOx, uint32_t GPIO_Pin);
+uint32_t GPIO_Read_Pin(My_GPIO_REG_TYPE* GPIOx, uint32_t GPIO_Pin);
+uint32_t Count_Debounce_Button(My_GPIO_REG_TYPE* GPIOx, uint32_t GPIO_Pin);
+
+#endif
